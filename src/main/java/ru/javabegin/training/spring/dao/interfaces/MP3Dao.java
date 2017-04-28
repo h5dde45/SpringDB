@@ -3,14 +3,17 @@ package ru.javabegin.training.spring.dao.interfaces;
 import ru.javabegin.training.spring.dao.objects.MP3;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MP3Dao {
 
-	void insert(MP3 mp3);
+	int insert(MP3 mp3);
 
     void insert(List<MP3> mp3List);
 
-	void delete(int id);
+    Map<String, Integer> getStat();
+
+    void delete(int id);
 
 	void delete(MP3 mp3);
 
