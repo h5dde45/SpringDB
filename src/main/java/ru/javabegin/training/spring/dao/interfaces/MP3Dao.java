@@ -9,9 +9,11 @@ public interface MP3Dao {
 
 	int insert(MP3 mp3);
 
-    void insert(List<MP3> mp3List);
+//    void insert(List<MP3> mp3List);
 
-    Map<String, Integer> getStat();
+	int insertList(List<MP3> listMP3);
+
+	Map<String, Integer> getStat();
 
     void delete(int id);
 
