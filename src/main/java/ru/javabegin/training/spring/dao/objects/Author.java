@@ -1,10 +1,9 @@
 package ru.javabegin.training.spring.dao.objects;
 
-public class MP3 {
+public class Author {
 
 	private int id;
 	private String name;
-	private Author author;
 
 	public int getId() {
 		return id;
@@ -20,14 +19,6 @@ public class MP3 {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Author getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(Author author) {
-		this.author = author;
 	}
 
 }
