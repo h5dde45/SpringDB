@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javabegin.training.spring.dao.interfaces.MP3Dao;
 import ru.javabegin.training.spring.dao.objects.Author;
 import ru.javabegin.training.spring.dao.objects.MP3;
@@ -37,6 +38,7 @@ public class SQLiteDAO implements MP3Dao {
     }
 
     @Override
+    @Transactional
     public int insert(MP3 mp3) {
         String sqlInsAuth = "insert into author (name) values (:authorName)";
         Author author = mp3.getAuthor();
