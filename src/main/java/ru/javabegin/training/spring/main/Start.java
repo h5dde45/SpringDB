@@ -10,17 +10,17 @@ public class Start {
 
     public static void main(String[] args) {
         MP3 mp3 = new MP3();
-        mp3.setName("name3");
+        mp3.setName("name5");
 
         Author author=new Author();
-        author.setName("author3");
+        author.setName("author5");
 
         mp3.setAuthor(author);
 
         ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
         SQLiteDAO sqLiteDAO = (SQLiteDAO) context.getBean("sqliteDAO");
 
-        System.out.println(sqLiteDAO.insert(mp3));
+        System.out.println(sqLiteDAO.insertMP3(mp3));
 
     }
 }
