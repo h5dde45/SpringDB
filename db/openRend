@@ -1,0 +1,67 @@
+        if (!addShape && spinning) {
+            rotateWobbler();
+        }
+        rotateShape();
+
+        glUniformMatrix4fv(pMatrix, 1, false, ProjectionMatrix.m, 0);
+        glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.rotateWobblerXY, 0);
+
+        glUniform1f(transparent, 1);
+        glUniformMatrix4fv(otMatrix, 1, false, bottom.mT, 0);
+        bottom.draw();
+
+        for (int i = 0; i < listBox.size() / 3; i++) {
+            CameraMatrix.unitBox[12] = listBox.get(i * 3);
+            CameraMatrix.unitBox[13] = listBox.get(i * 3 + 1);
+            CameraMatrix.unitBox[14] = listBox.get(i * 3 + 2);
+            glUniformMatrix4fv(otMatrix, 1, false, CameraMatrix.unitBox, 0);
+            box[listIndexBox.get(i * 3)][listIndexBox.get(i * 3 + 1)][listIndexBox.get(i * 3 + 2)].drawZero();
+        }
+        CameraMatrix.unitBox[12] = 0;
+        CameraMatrix.unitBox[13] = 0;
+        CameraMatrix.unitBox[14] = 0;
+
+        if (!selectShape) {
+            CameraMatrix.rotateShape[12] = -3f;
+            CameraMatrix.rotateShape[13] = 10;
+            CameraMatrix.rotateShape[14] = -35;
+            glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.rotateShape, 0);
+            shapeDraw(randomList.get(0));
+
+            CameraMatrix.rotateShape[12] = 3f;
+            glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.rotateShape, 0);
+            shapeDraw(randomList.get(1));
+
+            CameraMatrix.rotateShape[13] = -10;
+            glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.rotateShape, 0);
+            shapeDraw(randomList.get(2));
+
+            CameraMatrix.rotateShape[12] = -3f;
+            glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.rotateShape, 0);
+            shapeDraw(randomList.get(3));
+        } else {
+            shapeDraw(randomList.get(indexRandom));
+
+            glUniform1f(transparent, 0);
+
+            glUniformMatrix4fv(pMatrix, 1, false, ProjectionMatrix.im, 0);
+            glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.unitMatrix, 0);
+            glUniformMatrix4fv(otMatrix, 1, false, move.mT, 0);
+            move.draw();
+            if (!addShape) {
+                if (spinning) {
+                    rotation.draw();
+                } else {
+                    rotationNoAvailable.draw();
+                }
+            }
+
+            if (addShape) {
+                moveZ();
+            } else {
+                glUniformMatrix4fv(pMatrix, 1, false, ProjectionMatrix.m, 0);
+                glUniformMatrix4fv(vMatrix, 1, false, CameraMatrix.rotateWobblerXY, 0);
+                glUniformMatrix4fv(otMatrix, 1, false, top.mT, 0);
+                top.draw();
+            }
+        }
