@@ -1,0 +1,110 @@
+  ///mainactivity
+  
+  @Override
+    protected void onResume() {
+        super.onResume();
+        
+        
+        File file = new File(this.getFilesDir(), "history.txt");
+        if (file.exists()) {
+            try (FileInputStream fin = openFileInput("history.txt");
+                 DataInputStream dataIn = new DataInputStream(fin)) {
+                openGLRenderer.navigate = dataIn.readInt();
+                openGLRenderer.menuSelect = dataIn.readInt();
+                openGLRenderer.rP = dataIn.readFloat();
+                openGLRenderer.gP = dataIn.readFloat();
+                openGLRenderer.bP = dataIn.readFloat();
+                eventHandling.mode = dataIn.readInt();
+                openGLRenderer.angleX = dataIn.readFloat();
+                openGLRenderer.angleY = dataIn.readFloat();
+                CameraMatrix.move[12] = dataIn.readFloat();
+                CameraMatrix.move[13] = dataIn.readFloat();
+                CameraMatrix.move[14] = dataIn.readFloat();
+                openGLRenderer.newCameraLocation();
+                openGLRenderer.counter = dataIn.readInt();
+                openGLRenderer.switchMove = dataIn.readBoolean();
+                openGLRenderer.switchCount = dataIn.readBoolean();
+                openGLRenderer.kpp = dataIn.readBoolean();
+                openGLRenderer.newCube = dataIn.readBoolean();
+                openGLRenderer.writeData = dataIn.readBoolean();
+                openGLRenderer.deleteCube = dataIn.readBoolean();
+                openGLRenderer.removeData = dataIn.readBoolean();
+                openGLRenderer.speed = dataIn.readInt();
+                switch (openGLRenderer.speed) {
+                    case 2:
+                        openGLRenderer.speedValue = openGLRenderer.speedUnit * 2;
+                        openGLRenderer.angleXValue = openGLRenderer.angleUnit * 2;
+                        openGLRenderer.angleYValue = openGLRenderer.angleUnit * 2;
+                        break;
+                    case 3:
+                        openGLRenderer.speedValue = openGLRenderer.speedUnit * 4;
+                        openGLRenderer.angleXValue = openGLRenderer.angleUnit * 4;
+                        openGLRenderer.angleYValue = openGLRenderer.angleUnit * 4;
+                        break;
+                    case 4:
+                        openGLRenderer.speedValue = openGLRenderer.speedUnit * 8;
+                        openGLRenderer.angleXValue = openGLRenderer.angleUnit * 8;
+                        openGLRenderer.angleYValue = openGLRenderer.angleUnit * 8;
+                        break;
+                    case 5:
+                        openGLRenderer.speedValue = openGLRenderer.speedUnit * 16;
+                        openGLRenderer.angleXValue = openGLRenderer.angleUnit * 16;
+                        openGLRenderer.angleYValue = openGLRenderer.angleUnit * 16;
+                }
+                int c = dataIn.readInt();
+                for (int i = 0; i < c; i++) {
+                    String k = dataIn.readUTF();
+                    List<Float> temp = new ArrayList<>();
+                    int sl = dataIn.readInt();
+                    for (int j = 0; j < sl; j++) {
+                        temp.add(dataIn.readFloat());
+                    }
+                    openGLRenderer.map.put(k, temp);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            openGLRenderer.newCameraLocation();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        try (FileOutputStream out = openFileOutput("history.txt", MODE_PRIVATE);
+             DataOutputStream dataOut = new DataOutputStream(out)) {
+            dataOut.writeInt(openGLRenderer.navigate);
+            dataOut.writeInt(openGLRenderer.menuSelect);
+            dataOut.writeFloat(openGLRenderer.rP);
+            dataOut.writeFloat(openGLRenderer.gP);
+            dataOut.writeFloat(openGLRenderer.bP);
+            dataOut.writeInt(eventHandling.mode);
+            dataOut.writeFloat(openGLRenderer.angleX);
+            dataOut.writeFloat(openGLRenderer.angleY);
+            dataOut.writeFloat(CameraMatrix.move[12]);
+            dataOut.writeFloat(CameraMatrix.move[13]);
+            dataOut.writeFloat(CameraMatrix.move[14]);
+            dataOut.writeInt(openGLRenderer.counter);
+            dataOut.writeBoolean(openGLRenderer.switchMove);
+            dataOut.writeBoolean(openGLRenderer.switchCount);
+            dataOut.writeBoolean(openGLRenderer.kpp);
+            dataOut.writeBoolean(openGLRenderer.newCube);
+            dataOut.writeBoolean(openGLRenderer.writeData);
+            dataOut.writeBoolean(openGLRenderer.deleteCube);
+            dataOut.writeBoolean(openGLRenderer.removeData);
+            dataOut.writeInt(openGLRenderer.speed);
+            dataOut.writeInt(openGLRenderer.map.size());
+            for (Map.Entry<String, List<Float>> m : openGLRenderer.map.entrySet()) {
+                dataOut.writeUTF(m.getKey());
+                dataOut.writeInt(m.getValue().size());
+                for (float f : m.getValue()) {
+                    dataOut.writeFloat(f);
+                }
+            }
+            dataOut.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
